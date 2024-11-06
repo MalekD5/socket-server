@@ -9,7 +9,7 @@ me for another bigger project (HTTP Server from scratch).
 
 This only works on windows. make sure to run `server.c` file then use telnet to establish a connection:
 ```bash
-$ telnet remotehostname 3490
+$ telnet remotehostname 3030
 ```
 where the `remotehostname` is your device name ([Click here to find it](https://answers.microsoft.com/en-us/windows/forum/all/find-the-name-of-my-computer/12f6a4cc-845d-4163-aae8-ef0223f3104a)).
 
