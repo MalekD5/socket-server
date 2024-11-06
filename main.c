@@ -31,7 +31,7 @@ int main(void)
     struct addrinfo *serverInfo = {0};
 
     if ((status = getaddrinfo(NULL, "3940", &hints, &serverInfo)) != 0) {
-        fprintf(stderr, "getaddrinfo failed (%d).\n", status);
+        fprintf(stderr, "getaddrinfo failed (%s).\n", gai_strerror(status));
         exit(1);
     }
 
