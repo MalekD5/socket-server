@@ -21,19 +21,31 @@ int main(void)
         exit(2);
     }
 
-    struct sockaddr_in6 sa6; // IPv6
-    inet_pton(AF_INET6, "2001:db8:63b3:1::3490", &(sa6.sin6_addr)); // IPv6
+    int status;
+    struct addrinfo hints = {0};
 
-    struct sockaddr_in sa; // pretend this is loaded with something
-    inet_pton(AF_INET, "10.12.110.57", &(sa.sin_addr)); // IPv4
+    hints.ai_family = AF_INET;
+    hints.ai_socktype = SOCK_STREAM;
+    hints.ai_flags = AI_PASSIVE;
 
-    char ip4[INET_ADDRSTRLEN]; // space to hold the IPv4 string
-    inet_ntop(AF_INET, &(sa.sin_addr), ip4, INET_ADDRSTRLEN);
-    printf("The IPv4 address is: %s\n", ip4);
+    struct addrinfo *serverInfo = {0};
 
-    char ip6[INET6_ADDRSTRLEN];
-    inet_ntop(AF_INET6, &(sa6.sin6_addr), ip6, INET6_ADDRSTRLEN);
-    printf("The IPv6 address is: %s\n", ip6);
+    if ((status = getaddrinfo(NULL, "3940", &hints, &serverInfo)) != 0) {
+        fprintf(stderr, "getaddrinfo failed (%d).\n", status);
+        exit(1);
+    }
 
+    printf("IP Address:\n");
+
+    for (const struct addrinfo *p = serverInfo; p != NULL; p = p->ai_next) {
+
+        const boolean isPv4 =  p->ai_family == AF_INET;
+        char ip[isPv4 ? INET_ADDRSTRLEN : INET6_ADDRSTRLEN];
+        inet_ntop(AF_INET, p->ai_addr, ip, isPv4 ? INET_ADDRSTRLEN : INET6_ADDRSTRLEN);
+        printf("IP: %s\ntype: %s\n", ip, isPv4 ? "IPv4" : "IPv6");
+    }
+
+
+    freeaddrinfo(serverInfo);
     return 0;
 }
